@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consulta CEP</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 20px;
+    }
+    input {
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+    button {
+      font-size: 12px;
+      background-color: #0000FF;
+    }
+    button:hover {
+      background-color: #FFFFFF;
+    }
+    .resultado {
+      margin-top: 14px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Consulta de Endereço</h1>
+  <p>Digite o CEP (formato: 00000000)</p>
+  <input type="text" id="cep" placeholder="Informe o CEP" />
+  <button onclick="consulta()">Consultar</button>
+  <div id="resultado" class="resultado"></div>
+  <script>
+    function consulta() {
+      const cep = document.getElementById('cep').value;
+      const url = `https://viacep.com.br/ws/${cep}/json/`;
+      fetch(url)
+        .then(response => response.json())
+        .then(dados => {
+          if (dados.erro) {
+            document.getElementById('resultado').innerHTML = 'CEP não encontrado!';
+          } else {
+            document.getElementById('resultado').innerHTML = `
+              <strong>Endereço:</strong><br>
+              ${dados.logradouro}, ${dados.bairro}<br>
+              ${dados.localidade} - ${dados.uf}<br>
+              ${dados.cep}
+            `;
+          }
+        })
+        .catch(erro => {
+          document.getElementById('resultado').innerHTML = 'Erro!';
+          console.error(erro);
+        });
+    }
+  </script>
+</body>
+</html>
