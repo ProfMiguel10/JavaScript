@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>  
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 30px;
+    }
+    button {
+      padding: 20px 30px;
+      font-size: 12px;
+      background-color: #0000FF;
+      color: white;
+      border: none;
+      border-radius: 10px;
+    }
+    button:hover {
+      background-color: #FF0000;
+    }
+  </style>
+</head>
+<body>
+  <h1>Dados</h1>
+  <button id="excel">Gera Documento Excel</button>
+  <script>
+    document.getElementById("excel").addEventListener("click", () => {
+      const data = [
+        ["Nome", "Idade", "Cidade", "telefone"],
+        ["João", 5, "Rio de Janeiro", "99999"],
+        ["Nubia", 40, "Belo Horizonte", "99999"],
+        ["Elaine", 45, "Brasília", "99999"]
+      ];
+      const workbook = XLSX.utils.book_new();
+      const worksheet = XLSX.utils.aoa_to_sheet(data);
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Colaboradores");
+      XLSX.writeFile(workbook, "arquivo.xlsx");
+    });
+  </script>
+</body>
+</html>
