@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador de PDF</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      text-align: center;
+      padding: 30px;
+    }
+    button {
+      padding: 20px 30px;
+      font-size: 12px;
+      background-color: #0000FF;
+      color: white;
+      border: none;
+      border-radius: 10px;
+    }
+    button:hover {
+      background-color: #FF0000;
+    }
+  </style>
+</head>
+<body>
+  <h1>Gera de PDF</h1>
+  <button id="pdf">Gerar PDF</button>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const { jsPDF } = window.jspdf;
+        function gerarPDF() {
+        const doc = new jsPDF();
+        doc.setFont("Ariel", "normal");
+        doc.text("PDF", 10, 10);
+        doc.text("JavaScript", 10, 20);
+        doc.text("Melhor Aula", 10, 40);
+        doc.text("Meu Primeiro PDF", 10, 70);
+        doc.save("arquivo.pdf");
+      }
+      document.getElementById("pdf").addEventListener("click", gerarPDF);
+    });
+  </script>
+</body>
+</html>
