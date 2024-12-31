@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogo das Portas</title>
+<style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #FFFFFF;
+    }
+    h1 {
+      color: #333;
+    }
+    .jogo {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 20px auto;
+    }
+    .porta {
+      width: 150px;
+      height: 200px;
+      border: 1px solid #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      cursor: pointer;
+      font-weight: bold;
+      color: white;
+      border-radius: 10px;
+    }
+    #porta1 {
+      background-color: blue; 
+    }
+    #porta2 {
+      background-color: red; 
+    }
+    .porta:hover {
+      background-color: #0000FF;
+    }
+    .jogoE {
+      font-size: 20px;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    .button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #0000FF;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+    .button:hover {
+      background-color: #FF0000;
+    }
+  </style>
+</head>
+<body>
+  <h1>Jogo das Portas</h1>
+  <p>Escolha uma porta!</p>
+  <div class="jogo" id="jogoP">
+    <div class="porta" id="porta1" onclick="escolha(1)">Porta 1</div>
+    <div class="porta" id="porta2" onclick="escolha(2)">Porta 2</div>
+  </div>
+  <div id="resultado" class="jogoE"></div>
+  <button class="button" onclick="inicio()">Recomeçar</button>
+  <script>
+    let premio; 
+    let final = false;
+    function inicio() {
+      document.getElementById("resultado").innerHTML = '';
+      final = false;
+      premio = Math.floor(Math.random() * 2) + 1; 
+      document.getElementById("porta1").style.backgroundColor = "blue"; 
+      document.getElementById("porta2").style.backgroundColor = "red"; 
+      document.getElementById("jogoP").style.pointerEvents = "auto";
+    }
+    function escolha(portaNum) {
+      if (final) return; 
+      if (portaNum === premio) {
+        document.getElementById("porta" + portaNum).style.backgroundColor = "gold"; 
+        document.getElementById("resultado").innerHTML = "Você ganhou! Parabéns!";
+      } else {
+        document.getElementById("porta" + portaNum).style.backgroundColor = "grey"; 
+        document.getElementById("porta" + premio).style.backgroundColor = "gold"; 
+        document.getElementById("resultado").innerHTML = "Você perdeu! O prêmio estava na porta " + premio;
+      }
+      final = true;
+      document.getElementById("jogoP").style.pointerEvents = "none";
+    }
+    inicio();
+  </script>
+</body>
+</html>
