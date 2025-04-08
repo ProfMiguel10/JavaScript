@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Conversor de Moedas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h2 {
+      color: #0077b6;
+    }
+
+    .conversor {
+      background: #ffffff;
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    label {
+      font-weight: bold;
+    }
+
+    input, select, button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #0077b6;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #005f8a;
+    }
+
+    #resultado {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #333;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Conversor de Moedas</h2>
+
+  <div class="conversor">
+    <label for="valor">Valor:</label>
+    <input type="number" id="valor" placeholder="Digite o valor" step="0.01">
+
+    <label for="moeda-origem">Moeda de Origem:</label>
+    <select id="moeda-origem">
+      <option value="BRL">Real (BRL)</option>
+      <option value="USD">Dólar (USD)</option>
+      <option value="EUR">Euro (EUR)</option>
+    </select>
+
+    <label for="moeda-destino">Moeda de Destino:</label>
+    <select id="moeda-destino">
+      <option value="USD">Dólar (USD)</option>
+      <option value="EUR">Euro (EUR)</option>
+      <option value="BRL">Real (BRL)</option>
+    </select>
+
+    <button onclick="converterMoeda()">Converter</button>
+            <div id="resultado"></div>
+   </div>
+
+  <script>
+    async function converterMoeda() {
+      const valor = parseFloat(document.getElementById('valor').value);
+      const origem = document.getElementById('moeda-origem').value;
+      const destino = document.getElementById('moeda-destino').value;
+      const resultadoDiv = document.getElementById('resultado');
+
+      if (isNaN(valor) || valor <= 0) {
+        resultadoDiv.innerHTML = 'Digite um valor válido.';
+        return;
+      }
+
+      if (origem === destino) {
+        resultadoDiv.innerHTML = 'As moedas são iguais.';
+        return;
+      }
+
+      resultadoDiv.innerHTML = 'Carregando...';
+
+      try {
+        const par = `${origem}-${destino}`;
+        const res = await fetch(`https://economia.awesomeapi.com.br/json/last/${par}`);
+        const dados = await res.json();
+
+        const cotacao = dados[`${origem}${destino}`].bid;
+        const convertido = valor * parseFloat(cotacao);
+
+        resultadoDiv.innerHTML = `${valor.toFixed(2)} ${origem} = <strong>${convertido.toFixed(2)} ${destino}</strong>`;
+      } catch (e) {
+        resultadoDiv.innerHTML = 'Erro ao converter.';
+        console.error(e);
+      }
+    }
+  </script>
+
+</body>
+</html>
+
+
