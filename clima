@@ -2,11 +2,11 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Clima Atual - Open-Meteo</title>
+  <title>Clima</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 20px;
+      padding: 15px;
       background: #f0f8ff;
     }
     h1 {
@@ -24,7 +24,7 @@
 </head>
 <body>
 
-  <h1>Informações do Clima em Brasília</h1>
+  <h1>Agora em Brasília</h1>
   <div id="caixa-de-informacoes-do-clima">Buscando...</div>
 
   <script>
