@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Clima Atual - Open-Meteo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f0f8ff;
+    }
+    h1 {
+      color: #0077b6;
+    }
+    #caixa-de-informacoes-do-clima {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.05);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Informações do Clima em Brasília</h1>
+  <div id="caixa-de-informacoes-do-clima">Buscando...</div>
+
+  <script>
+    const localizacaoLatitude = -15.78;
+    const localizacaoLongitude = -47.93;
+
+    const enderecoDaApiDoClima = `https://api.open-meteo.com/v1/forecast?latitude=${localizacaoLatitude}&longitude=${localizacaoLongitude}&current_weather=true`;
+
+    async function mostrarClimaAtualNaTela() {
+      const elementoDeResultado = document.getElementById('caixa-de-informacoes-do-clima');
+
+      try {
+        const respostaDaRequisicao = await fetch(enderecoDaApiDoClima);
+
+        if (!respostaDaRequisicao.ok) {
+          throw new Error(`Erro ao buscar dados: ${respostaDaRequisicao.status}`);
+        }
+
+        const dadosRecebidos = await respostaDaRequisicao.json();
+        const informacoesDoClimaAgora = dadosRecebidos.current_weather;
+
+        elementoDeResultado.innerHTML = `
+          <strong>Temperatura:</strong> ${informacoesDoClimaAgora.temperature}°C<br>
+          <strong>Velocidade do Vento:</strong> ${informacoesDoClimaAgora.windspeed} km/h<br>
+          <strong>Direção do Vento:</strong> ${informacoesDoClimaAgora.winddirection}°<br>
+          <strong>Horário da Medição:</strong> ${informacoesDoClimaAgora.time}
+        `;
+      } catch (erroAoBuscar) {
+        elementoDeResultado.innerHTML = `Erro ao obter os dados do clima: ${erroAoBuscar.message}`;
+      }
+    }
+
+    mostrarClimaAtualNaTela();
+  </script>
+
+</body>
+</html>
