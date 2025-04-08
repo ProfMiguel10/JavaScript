@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>CEP - Clima</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 15px;
+      background: #f0f8ff;
+    }
+    h1 {
+      color: #0077b6;
+    }
+    #caixa-de-informacoes-do-clima {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.05);
+    }
+    input, button {
+      padding: 8px;
+      margin-top: 10px;
+      margin-right: 5px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>CEP - Clima</h1>
+
+  <input type="text" id="input-cep" placeholder="CEP" maxlength="9">
+  <button onclick="buscarClimaPorCep()">Buscar Clima</button>
+
+  <div id="caixa-de-informacoes-do-clima">Digite um CEP</div>
+
+  <script>
+    async function buscarClimaPorCep() {
+      const cep = document.getElementById('input-cep').value.trim().replace(/\D/g, '');
+      const resultado = document.getElementById('caixa-de-informacoes-do-clima');
+
+      if (cep.length !== 8) {
+        resultado.innerHTML = 'CEP inválido. Digite os 8 números.';
+        return;
+      }
+
+      try {
+        const respostaViaCEP = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const dadosEndereco = await respostaViaCEP.json();
+
+        if (dadosEndereco.erro) {
+          resultado.innerHTML = 'CEP não encontrado.';
+          return;
+        }
+
+        const cidade = dadosEndereco.localidade;
+        const estado = dadosEndereco.uf;
+        const respostaLocalizacao = await fetch(`https://nominatim.openstreetmap.org/search?city=${cidade}&state=${estado}&country=Brasil&format=json`);
+        const dadosGeo = await respostaLocalizacao.json();
+
+        if (!dadosGeo.length) {
+          resultado.innerHTML = 'Não foi possível localizar a cidade.';
+          return;
+        }
+
+        const latitude = dadosGeo[0].lat;
+        const longitude = dadosGeo[0].lon;
+
+        const respostaClima = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
+        const dadosClima = await respostaClima.json();
+
+        const clima = dadosClima.current_weather;
+
+        resultado.innerHTML = `
+          <strong>Cidade:</strong> ${cidade} - ${estado}<br>
+          <strong>Temperatura:</strong> ${clima.temperature}°C<br>
+          <strong>Velocidade do Vento:</strong> ${clima.windspeed} km/h<br>
+          <strong>Direção do Vento:</strong> ${clima.winddirection}°<br>
+          <strong>Horário da Medição:</strong> ${clima.time}
+        `;
+      } catch (erro) {
+        resultado.innerHTML = `Erro: ${erro.message}`;
+      }
+    }
+  </script>
+
+</body>
+</html>
